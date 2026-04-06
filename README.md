@@ -10,7 +10,7 @@
     A Kubernetes Operator to create and manage Cloudflare Tunnels and DNS records <br /> for (HTTP/TCP/UDP*) Service Resources
     <br />
     <br />
-    <a href="https://github.com/geo-mena/cloudflare-operator/blob/main/docs/getting-started.md"><strong>Getting Started Guide »</strong></a>
+    <a href="https://cf-operator-docs.tofi.pro/getting-started"><strong>Getting Started Guide »</strong></a>
     <br />
     <br />
     <a href="https://github.com/geo-mena/cloudflare-operator/issues">Report Bug</a>
