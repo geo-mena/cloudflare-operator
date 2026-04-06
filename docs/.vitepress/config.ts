@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitepress';
+import { withMermaid } from 'vitepress-plugin-mermaid';
 
-export default defineConfig({
+export default withMermaid(defineConfig({
   title: 'Cloudflare Operator',
   description: 'A Kubernetes Operator to create and manage Cloudflare Tunnels and DNS records',
   lang: 'en-US',
@@ -102,4 +103,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));

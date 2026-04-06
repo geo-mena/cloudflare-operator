@@ -4,25 +4,12 @@
 
 This example configures cloudflared to send all traffic to a reverse proxy, and then configure routing in the reverse proxy.
 
-```
-+----------------------+
-|   internet users     |
-+----------------------+
-           |
-           v
-+----------------------+
-|  cloudflare tunnel   |
-+----------------------+
-           |
-           v
-+----------------------+
-|    reverse proxy     |
-+----------------------+
-     |           |
-     v           v
-+---------+ +----------+
-| App #1  | |  App #2  |
-+---------+ +----------+
+```mermaid
+graph TD
+    A[Internet Users] --> B[Cloudflare Tunnel]
+    B --> C[Reverse Proxy]
+    C --> D[App 1]
+    C --> E[App 2]
 ```
 
 ## Motivation

@@ -4,20 +4,11 @@
 
 This example shows how to configure cloudflared to route to two (or more) applications you are hosting.
 
-```
-+-----------------------+
-|    internet users     |
-+-----------------------+
-            |
-            v
-+-----------------------+
-|   cloudflare tunnel   |
-+-----------------------+
-     |             |
-     v             v
- +-------+     +-------+
- | app 1 |     | app 2 |
- +-------+     +-------+
+```mermaid
+graph TD
+    A[Internet Users] --> B[Cloudflare Tunnel]
+    B --> C[App 1]
+    B --> D[App 2]
 ```
 
 ## Motivation
