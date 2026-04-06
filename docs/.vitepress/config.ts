@@ -19,12 +19,26 @@ export default withMermaid(defineConfig({
 
   head: [
     ['meta', { name: 'author', content: 'geomena' }],
-    ['meta', { name: 'keywords', content: 'cloudflare, operator, kubernetes, tunnel, dns, k8s' }],
+    ['meta', { name: 'keywords', content: 'cloudflare, operator, kubernetes, tunnel, dns, k8s, cloudflared' }],
     ['link', { rel: 'icon', href: '/favicon.ico' }],
-    ['meta', { name: 'theme-color', content: '#f48120' }],
+    ['link', { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' }],
+    ['link', { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png' }],
+    ['link', { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png' }],
+
+    ['meta', { name: 'theme-color', content: '#ffffff' }],
+
     ['meta', { property: 'og:title', content: 'Cloudflare Operator Docs' }],
     ['meta', { property: 'og:description', content: 'A Kubernetes Operator to create and manage Cloudflare Tunnels and DNS records' }],
+    ['meta', { property: 'og:image', content: 'https://cloudflare-operator-docs.pages.dev/og-image.png' }],
+    ['meta', { property: 'og:url', content: 'https://cloudflare-operator-docs.pages.dev' }],
     ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:site_name', content: 'Cloudflare Operator' }],
+    ['meta', { property: 'og:locale', content: 'en_US' }],
+
+    ['meta', { name: 'twitter:card', content: 'summary' }],
+    ['meta', { name: 'twitter:title', content: 'Cloudflare Operator Docs' }],
+    ['meta', { name: 'twitter:description', content: 'A Kubernetes Operator to create and manage Cloudflare Tunnels and DNS records' }],
+    ['meta', { name: 'twitter:image', content: 'https://cloudflare-operator-docs.pages.dev/og-image.png' }],
   ],
 
   themeConfig: {
