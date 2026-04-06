@@ -1,6 +1,7 @@
 {
   "name": "@geomena/cloudflare-operator-docs",
   "type": "module",
+  "packageManager": "pnpm@9.15.0",
   "version": "0.13.1",
   "private": true,
   "description": "Documentation website for cloudflare-operator.",
