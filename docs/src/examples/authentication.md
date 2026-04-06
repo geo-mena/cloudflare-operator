@@ -48,8 +48,27 @@ kubectl create secret generic cloudflare-secrets \
 
 ### Declarative
 
-1. Replace `<api-token>` in `manifests/secret.yaml` with your Cloudflare API token.
-2. Deploy the secret:
-   ```bash
-   kubectl apply -f manifests/secret.yaml
-   ```
+Create a `secret.yaml` file:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cloudflare-secrets
+  namespace: cloudflare-operator-system
+type: Opaque
+stringData:
+  CLOUDFLARE_API_TOKEN: <api-token>
+#  CLOUDFLARE_API_KEY: <api-key> # if you use an API key instead of a token, replace this instead
+
+# CREDENTIAL_FILE is used if found, else CREDENTIAL_SECRET is used to build the file.
+# Either of them is needed when using an existing tunnel
+#  CLOUDFLARE_TUNNEL_CREDENTIAL_FILE: <~/.cloudflared/tunnelID.json contents>
+#  CLOUDFLARE_TUNNEL_CREDENTIAL_SECRET: <TunnelSecret from ~/.cloudflared/tunnelID.json>
+```
+
+Deploy the secret:
+
+```bash
+kubectl apply -f secret.yaml
+```

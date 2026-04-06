@@ -22,39 +22,73 @@ In order to route traffic from the internet to your cluster, a Tunnel/ClusterTun
 
 1. Decide whether you want a **Tunnel** or **ClusterTunnel**.
 
-2. Replace all placeholder values formatted `<like-this>` in your manifest:
-   - `<email-address>`: email associated with your Cloudflare zone
-   - `<domain>`: domain of your Cloudflare zone
-   - `<secret-name>`: name of the secret containing your credentials
-   - `<account-id>`: your Cloudflare account ID
+2. Replace all placeholder values formatted `<like-this>` in the manifest below.
+
+### Tunnel (namespaced)
+
+```yaml
+apiVersion: networking.cfargotunnel.com/v1alpha2
+kind: Tunnel
+metadata:
+  name: example-tunnel
+spec:
+  newTunnel:
+    name: example-tunnel
+  cloudflare:
+    email: <email-address>
+    domain: <domain>
+    secret: <secret-name>
+    accountId: <account-id>
+```
+
+### ClusterTunnel (cluster-scoped)
+
+```yaml
+apiVersion: networking.cfargotunnel.com/v1alpha2
+kind: ClusterTunnel
+metadata:
+  name: k3s-cluster-tunnel
+spec:
+  newTunnel:
+    name: my-k8s-tunnel
+  cloudflare:
+    email: email@example.com
+    domain: example.com
+    secret: cloudflare-secrets
+    # accountId and accountName cannot be both empty.
+    # If both are provided, Account ID is used if valid, else falls back to Account Name.
+    accountName: <Cloudflare account name>
+    accountId: <Cloudflare account ID>
+```
 
 3. Deploy your Tunnel/ClusterTunnel:
-   ```bash
-   # execute one of these, not both
-   kubectl apply -f manifests/tunnel.yaml
-   kubectl apply -f manifests/cluster-tunnel.yaml
-   ```
+
+```bash
+# execute one of these, not both
+kubectl apply -f tunnel.yaml
+kubectl apply -f cluster-tunnel.yaml
+```
 
 4. Verify the resource was created:
 
-   ```bash
-   kubectl get clustertunnel
-   kubectl get tunnel -n cloudflare-operator-system
-   # NAME                 TUNNELID
-   # k3s-cluster-tunnel   <uuid>
-   ```
+```bash
+kubectl get clustertunnel
+kubectl get tunnel -n cloudflare-operator-system
+# NAME                 TUNNELID
+# k3s-cluster-tunnel   <uuid>
+```
 
-   ```bash
-   kubectl get configmap k3s-cluster-tunnel -n cloudflare-operator-system
-   # NAME                 DATA   AGE
-   # k3s-cluster-tunnel   1      5m
-   ```
+```bash
+kubectl get configmap k3s-cluster-tunnel -n cloudflare-operator-system
+# NAME                 DATA   AGE
+# k3s-cluster-tunnel   1      5m
+```
 
-   ```bash
-   kubectl get deployment k3s-cluster-tunnel -n cloudflare-operator-system
-   # NAME                 READY   UP-TO-DATE   AVAILABLE   AGE
-   # k3s-cluster-tunnel   1/1     1            1           5m
-   ```
+```bash
+kubectl get deployment k3s-cluster-tunnel -n cloudflare-operator-system
+# NAME                 READY   UP-TO-DATE   AVAILABLE   AGE
+# k3s-cluster-tunnel   1/1     1            1           5m
+```
 
 ## Next steps
 
