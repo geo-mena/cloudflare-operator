@@ -1,0 +1,14 @@
+## Append samples you want in your CSV to this file as resources ##
+resources:
+- v1_namespace.yaml
+- v1_secret.yaml
+- networking_v1alpha1_tunnel.yaml
+- apps_v1_deployment.yaml
+- v1_service.yaml
+- networking_v1alpha1_clustertunnel.yaml
+- networking_v1alpha1_tunnelbinding.yaml
+- networking_v1alpha1_access.yaml
+- networking_v1alpha1_accesstunnel.yaml
+- networking_v1alpha2_tunnel.yaml
+- networking_v1alpha2_clustertunnel.yaml
+#+kubebuilder:scaffold:manifestskustomizesamples

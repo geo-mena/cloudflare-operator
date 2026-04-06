@@ -55,5 +55,6 @@ Here is how the operator and the Tunnel Resource fit into your deployment.
 
 ![Operator Architecture](./docs/images/OperatorArchitecture.png#center)
 
+There is more detailed information on this architecture and the thought process behind it in my blog post.
 
 > **_NOTE_**: This is **NOT** an official operator provided/backed by Cloudflare Inc. It utilizes their [v4 API](https://api.cloudflare.com/) and their [`cloudflared`](https://github.com/cloudflare/cloudflared) to automate setting up of tunnels on Kubernetes.
