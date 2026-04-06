@@ -1,0 +1,21 @@
+{
+  "name": "@geomena/cloudflare-operator-docs",
+  "type": "module",
+  "version": "0.13.1",
+  "private": true,
+  "description": "Documentation website for cloudflare-operator.",
+  "author": "geomena <geomenacontact@gmail.com>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/geo-mena/cloudflare-operator"
+  },
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.3"
+  }
+}
