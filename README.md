@@ -2,7 +2,7 @@
 
 <div align="center">
   <a href="https://github.com/geo-mena/cloudflare-operator">
-    <img src="docs/images/CloudflareOperatorLogo.png" alt="Logo" height="250">
+    <img src="docs-v1/images/CloudflareOperatorLogo.png" alt="Logo" height="250">
   </a>
   <br />
 
@@ -53,7 +53,7 @@ The Cloudflare Operator aims to provide a new way of dynamically deploying the [
 
 Here is how the operator and the Tunnel Resource fit into your deployment.
 
-![Operator Architecture](./docs/images/OperatorArchitecture.png#center)
+![Operator Architecture](./docs-v1/images/OperatorArchitecture.png#center)
 
 There is more detailed information on this architecture and the thought process behind it in my blog post.
 
