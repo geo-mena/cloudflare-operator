@@ -1,50 +1,41 @@
-name: cd-docs
+name: CD - Docs
 
 on:
   push:
     branches:
       - main
-    paths:
-      - "docs/**"
-  pull_request:
-    branches:
-      - main
-    paths:
-      - "docs/**"
-  workflow_dispatch:
 
 jobs:
-  deploy:
+  publish-docs-prod:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       deployments: write
-    defaults:
-      run:
-        working-directory: docs
+    name: Publish docs to production
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
         with:
-          version: 9
+          node-version: 22
+          cache: 'pnpm'
+          cache-dependency-path: docs/pnpm-lock.yaml
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm i
+        working-directory: docs
 
-      - name: Build docs
+      - name: Build the docs
         run: pnpm build
+        working-directory: docs
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy docs/dist --project-name=cloudflare-operator-docs
+          command: pages deploy dist --project-name=cloudflare-operator-docs --branch=main
+          workingDirectory: docs
