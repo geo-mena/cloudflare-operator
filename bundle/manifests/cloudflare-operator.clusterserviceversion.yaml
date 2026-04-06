@@ -1,0 +1,344 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: |-
+      [
+        {
+          "apiVersion": "networking.cfargotunnel.com/v1alpha1",
+          "kind": "ClusterTunnel",
+          "metadata": {
+            "name": "clustertunnel-sample"
+          },
+          "spec": {
+            "cloudflare": {
+              "accountId": "\u003cCloudflare account ID\u003e",
+              "accountName": "\u003cCloudflare account name\u003e",
+              "domain": "example.com",
+              "email": "email@example.com",
+              "secret": "cloudflare-secrets"
+            },
+            "newTunnel": {
+              "name": "new-k8s-cluster-tunnel"
+            },
+            "size": 2
+          }
+        },
+        {
+          "apiVersion": "networking.cfargotunnel.com/v1alpha1",
+          "kind": "Tunnel",
+          "metadata": {
+            "name": "tunnel-sample",
+            "namespace": "testing-crd"
+          },
+          "spec": {
+            "cloudflare": {
+              "accountId": "\u003cCloudflare account ID\u003e",
+              "accountName": "\u003cCloudflare account name\u003e",
+              "domain": "example.com",
+              "email": "email@example.com",
+              "secret": "cloudflare-secrets"
+            },
+            "newTunnel": {
+              "name": "new-k8s-tunnel"
+            },
+            "size": 2
+          }
+        },
+        {
+          "apiVersion": "networking.cfargotunnel.com/v1alpha1",
+          "kind": "TunnelBinding",
+          "metadata": {
+            "name": "tunnelbinding-sample"
+          },
+          "subjects": [
+            {
+              "name": "whoami-test",
+              "spec": {
+                "caPool": "custom",
+                "fqdn": "whoami-test.example.com",
+                "noTlsVerify": false,
+                "target": "http://svc-1.namespace.cluster.local:8080"
+              }
+            }
+          ],
+          "tunnelRef": {
+            "kind": "ClusterTunnel",
+            "name": "clustertunnel-sample"
+          }
+        }
+      ]
+    capabilities: Basic Install
+    createdAt: "2025-04-08T23:52:30Z"
+    operators.operatorframework.io/builder: operator-sdk-v1.39.2
+    operators.operatorframework.io/project_layout: go.kubebuilder.io/v4
+  name: cloudflare-operator.v0.11.1
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - description: ClusterTunnel is the Schema for the clustertunnels API
+      displayName: Cluster Tunnel
+      kind: ClusterTunnel
+      name: clustertunnels.networking.cfargotunnel.com
+      version: v1alpha1
+    - kind: TunnelBinding
+      name: tunnelbindings.networking.cfargotunnel.com
+      version: v1alpha1
+    - description: Tunnel is the Schema for the tunnels API
+      displayName: Tunnel
+      kind: Tunnel
+      name: tunnels.networking.cfargotunnel.com
+      version: v1alpha1
+  description: This operator provides a Tunnel Custom Resource to create and use existing
+    Cloudflare Tunnels. Further, it provides a Service Controller to add services
+    to be accessible via the internet using the Tunnel resource.
+  displayName: Cloudflare Tunnel Service Operator
+  icon:
+  - base64data: ""
+    mediatype: ""
+  install:
+    spec:
+      clusterPermissions:
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - create
+          - patch
+        - apiGroups:
+          - apps
+          resources:
+          - deployments
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          - secrets
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - services
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - networking.cfargotunnel.com
+          resources:
+          - clustertunnels
+          - tunnelbindings
+          - tunnels
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - networking.cfargotunnel.com
+          resources:
+          - clustertunnels/finalizers
+          - tunnelbindings/finalizers
+          - tunnels/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - networking.cfargotunnel.com
+          resources:
+          - clustertunnels/status
+          - tunnelbindings/status
+          - tunnels/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - authentication.k8s.io
+          resources:
+          - tokenreviews
+          verbs:
+          - create
+        - apiGroups:
+          - authorization.k8s.io
+          resources:
+          - subjectaccessreviews
+          verbs:
+          - create
+        serviceAccountName: cloudflare-operator-controller-manager
+      deployments:
+      - label:
+          app.kubernetes.io/managed-by: kustomize
+          app.kubernetes.io/name: cloudflare-operator
+          control-plane: controller-manager
+        name: cloudflare-operator-controller-manager
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              control-plane: controller-manager
+          strategy: {}
+          template:
+            metadata:
+              annotations:
+                kubectl.kubernetes.io/default-container: manager
+              labels:
+                control-plane: controller-manager
+            spec:
+              affinity:
+                nodeAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    nodeSelectorTerms:
+                    - matchExpressions:
+                      - key: kubernetes.io/arch
+                        operator: In
+                        values:
+                        - amd64
+                        - arm64
+                      - key: kubernetes.io/os
+                        operator: In
+                        values:
+                        - linux
+              containers:
+              - args:
+                - --metrics-bind-address=:8443
+                - --leader-elect
+                - --health-probe-bind-address=:8081
+                command:
+                - /manager
+                image: geo-mena/cloudflare-operator:0.13.1
+                livenessProbe:
+                  httpGet:
+                    path: /healthz
+                    port: 8081
+                  initialDelaySeconds: 15
+                  periodSeconds: 20
+                name: manager
+                readinessProbe:
+                  httpGet:
+                    path: /readyz
+                    port: 8081
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                resources:
+                  limits:
+                    cpu: 200m
+                    memory: 200Mi
+                  requests:
+                    cpu: 100m
+                    memory: 100Mi
+                securityContext:
+                  allowPrivilegeEscalation: false
+                  capabilities:
+                    drop:
+                    - ALL
+                  readOnlyRootFilesystem: true
+              securityContext:
+                runAsNonRoot: true
+                seccompProfile:
+                  type: RuntimeDefault
+              serviceAccountName: cloudflare-operator-controller-manager
+              terminationGracePeriodSeconds: 10
+      - name: whoami
+        spec:
+          selector:
+            matchLabels:
+              app: whoami
+          strategy: {}
+          template:
+            metadata:
+              labels:
+                app: whoami
+            spec:
+              containers:
+              - image: traefik/whoami
+                name: whoami
+                ports:
+                - containerPort: 80
+                resources:
+                  limits:
+                    cpu: 500m
+                    memory: 128Mi
+      permissions:
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
+        - apiGroups:
+          - coordination.k8s.io
+          resources:
+          - leases
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - create
+          - patch
+        serviceAccountName: cloudflare-operator-controller-manager
+    strategy: deployment
+  installModes:
+  - supported: false
+    type: OwnNamespace
+  - supported: false
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  keywords:
+  - operator
+  - cloudflare
+  - cloudflare-tunnel
+  - cloudflared
+  - kubernetes
+  - kubernetes-operator
+  links:
+  - name: Cloudflare Operator
+    url: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/run-tunnel
+  maintainers:
+  - email: ""
+    name: geo-mena
+  maturity: alpha
+  provider:
+    name: geo-mena
+    url: https://github.com/geo-mena/cloudflare-operator
+  version: 0.13.1
