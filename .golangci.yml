@@ -1,0 +1,58 @@
+version: "2"
+
+run:
+  go: '1.24'
+  timeout: 5m
+  allow-parallel-runners: true
+
+linters:
+  default: none
+  enable:
+    - dupl
+    - errcheck
+    - ginkgolinter
+    - goconst
+    - gocyclo
+    - govet
+    - ineffassign
+    - misspell
+    - nakedret
+    - prealloc
+    - revive
+    - staticcheck
+    - unconvert
+    - unparam
+    - unused
+    - errname
+    - gocritic
+    - nilerr
+    - interfacebloat
+    - usestdlibvars
+  settings:
+    revive:
+      enable-all-rules: true
+      rules:
+        - name: exported
+          disabled: true
+        - name: line-length-limit
+          arguments: [150]
+        - name: function-length
+          disabled: true
+        - name: add-constant
+          disabled: true
+    interfacebloat:
+      max: 15
+  exclusions:
+    generated: lax
+    rules:
+      - linters:
+          - revive
+        path: api/*
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  settings:
+    goimports:
+      local-prefixes:
+        - github.com/geo-mena/cloudflare-operator
