@@ -28,7 +28,11 @@ export default withMermaid(defineConfig({
   ],
 
   themeConfig: {
-    logo: '/logo.png',
+    logo: {
+      light: '/icon-dark.svg',
+      dark: '/icon-light.svg',
+      alt: 'Cloudflare Operator',
+    },
     siteTitle: 'Cloudflare Operator',
 
     nav: [
